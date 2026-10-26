@@ -91,6 +91,18 @@
 			<forward name="success" path="/result.jsp"/>
 		</action>
 		
+		<!-- "delete" action -->
+		<action path="/itemDelete"
+        	type="action.ItemDeleteAction"
+        	scope="request"
+        	validate="false">
+			<!-- 成功: 一覧へリダイレクト(二重削除防止) -->
+  			<forward name="success" path="/itemList.do" redirect="true"/>
+  			<!-- 失敗: リダイレクトせずに forward(request に保存したエラーを一覧に表示するため) -->
+  			<forward name="error" path="/itemList.do"/>
+		</action>
+
+		
 		
     <!-- sample input and input submit actions
   		

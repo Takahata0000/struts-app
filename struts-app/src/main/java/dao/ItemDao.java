@@ -105,4 +105,14 @@ public class ItemDao {
         }
         return list;
     }
+    
+    /** 商品を1件削除する。削除できた件数(0 または 1)を返す。 */
+    public int delete(long itemId) throws SQLException {
+        String sql = "DELETE FROM item WHERE item_id = ?";
+        try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setLong(1, itemId);
+            return ps.executeUpdate();
+        }
+    }
 }

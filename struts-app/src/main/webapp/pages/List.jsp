@@ -52,7 +52,7 @@
             <th>種類</th>
             <th>作成日</th>
             <th>更新日</th>
-            <%-- ステップ4で「操作」列を追加する --%>
+            <th class="text-center">操作</th>
           </tr>
         </thead>
         <tbody>
@@ -70,7 +70,17 @@
                   <span class="muted">-</span>
                 </logic:notPresent>
               </td>
-              <%-- ステップ4・5で「操作」列のセルを追加する --%>
+              <td>
+                <div class="actions">
+                  <form class="inline-form" method="post"
+                        action="<html:rewrite action='/itemDelete'/>"
+                        onsubmit="return confirm('この商品を削除します。よろしいですか?');">
+                    <input type="hidden" name="itemId" value="<bean:write name='item' property='itemId'/>">
+                    <button type="submit" class="btn btn-delete"
+                            aria-label="<bean:write name='item' property='itemName'/>を削除">削除</button>
+                  </form>
+                </div>
+              </td>
             </tr>
           </logic:iterate>
         </tbody>
