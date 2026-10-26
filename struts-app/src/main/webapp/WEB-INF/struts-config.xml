@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+          "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+
+<struts-config>
+
+<!-- Form Bean Definitions -->
+
+    <form-beans>
+    <!-- sample form bean descriptor for an ActionForm
+        <form-bean
+            name="inputForm"
+            type="app.InputForm"/>
+    end sample -->
+	<form-bean name="helloForm" type="form.HelloForm"/>
+	
+    <!-- sample form bean descriptor for a DynaActionForm
+        <form-bean
+            name="logonForm"
+            type="org.apache.struts.action.DynaActionForm">
+            <form-property
+                name="username"
+                type="java.lang.String"/>
+            <form-property
+                name="password"
+                type="java.lang.String"/>
+       </form-bean>
+    end sample -->
+    </form-beans>
+
+
+<!-- ========================================= Global Exception Definitions -->
+
+    <global-exceptions>
+        <!-- sample exception handler
+        <exception
+            key="expired.password"
+            type="app.ExpiredPasswordException"
+            path="/changePassword.jsp"/>
+        end sample -->
+    </global-exceptions>
+
+
+<!-- ========== Global Forward Definitions （どの Action からでも使える遷移先）===-->
+
+    <global-forwards>
+        <!-- Default forward to "Welcome" action -->
+        <!-- Demonstrates using index.jsp to forward -->
+        <forward
+            name="welcome"
+            path="/Welcome.do"/>
+         <!--<forward
+            name="itemList	"
+            path="/ItemListAction.do"/>-->
+    </global-forwards>
+
+
+<!-- =================== Action Mapping Definitions（リクエストの URL と処理を対応） -->
+
+    <action-mappings>
+		<!-- "Welcome" action -->
+        <!-- Forwards to Welcome.jsp -->
+        <action path="/Welcome" forward="/pages/Welcome.jsp"/>
+        
+        <!-- "list" action -->
+		<action 
+			path="/itemList"
+        	type="action.ItemListAction"
+        	scope="request"
+        	validate="false">
+  			<forward name="success" path="/pages/List.jsp"/>
+		</action>
+        
+        <!-- "Input" action -->
+		<action
+            path="/Input"
+            type="org.apache.struts.actions.ForwardAction"
+            parameter="/pages/Input.jsp"/>
+		
+		<!-- "hello" action(welcome.jsp form) -->
+		<action 
+			path="/hello"
+			type="action.HelloAction"
+			name="helloForm"
+			scope="request"
+			validate="true"
+			input="/pages/Welcome.jsp">
+			<forward name="success" path="/result.jsp"/>
+		</action>
+		
+		
+    <!-- sample input and input submit actions
+  		
+        <action
+            path="/Input"
+            type="org.apache.struts.actions.ForwardAction"
+            parameter="/pages/Input.jsp"/>
+
+        <action
+            path="/InputSubmit"
+            type="app.InputAction"
+            name="inputForm"
+            scope="request"
+            validate="true"
+            input="/pages/Input.jsp"/>
+
+            <action
+                path="/edit*"
+                type="app.Edit{1}Action"
+                name="inputForm"
+                scope="request"
+                validate="true"
+                input="/pages/Edit{1}.jsp"/>
+
+    end samples -->
+    </action-mappings>
+
+
+<!-- ======================================== Message Resources Definitions -->
+
+    <message-resources parameter="MessageResources" />
+
+
+<!-- =============================================== Plug Ins Configuration -->
+
+  <!-- ======================================================= Tiles plugin -->
+  <!--
+     This plugin initialize Tiles definition factory. This later can takes some
+	 parameters explained here after. The plugin first read parameters from
+	 web.xml, thenoverload them with parameters defined here. All parameters
+	 are optional.
+     The plugin should be declared in each struts-config file.
+
+    <plug-in className="org.apache.struts.tiles.TilesPlugin" >
+
+      <set-property property="definitions-config"
+                       value="/WEB-INF/tiles-defs.xml" />
+      <set-property property="moduleAware" value="true" />
+    </plug-in>
+  -->  
+
+
+  <!-- =================================================== Validator plugin -->
+
+  <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+    <set-property
+        property="pathnames"
+        value="/org/apache/struts/validator/validator-rules.xml,
+               /WEB-INF/validation.xml"/>
+  </plug-in>
+
+</struts-config>
+

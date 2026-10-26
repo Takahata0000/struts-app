@@ -1,0 +1,11 @@
+# DB接続情報(コミットしない)
+db.properties
+
+# ビルド出力
+/build/
+/bin/
+/target/
+*.class
+
+# Eclipse
+.settings/
