@@ -79,4 +79,30 @@ public class ItemDao {
         }
         return list;
     }
+    
+    /**
+     * 商品名の部分一致で検索する(item_id の昇順)。
+     * LIKE の特殊文字(% _ \)は検索文字として扱うようエスケープする。
+     */
+    public List<ItemDto> searchByName(String keyword) throws SQLException {
+        String sql = "SELECT " + SELECT_COLS + " FROM item "
+                   + "WHERE item_name LIKE ? ESCAPE '\\' "
+                   + "ORDER BY item_id";
+ 
+        String escaped = keyword.replace("\\", "\\\\")
+                                .replace("%", "\\%")
+                                .replace("_", "\\_");
+ 
+        List<ItemDto> list = new ArrayList<ItemDto>();
+        try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, "%" + escaped + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapRow(rs));
+                }
+            }
+        }
+        return list;
+    }
 }
