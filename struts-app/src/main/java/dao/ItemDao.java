@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -112,6 +113,42 @@ public class ItemDao {
         try (Connection con = DriverManager.getConnection(URL, USER, PASS);
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setLong(1, itemId);
+            return ps.executeUpdate();
+        }
+    }
+    
+    /** 商品を1件取得する。存在しない場合は null を返す。 */
+    public ItemDto findById(long itemId) throws SQLException {
+        String sql = "SELECT " + SELECT_COLS + " FROM item WHERE item_id = ?";
+        try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setLong(1, itemId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? mapRow(rs) : null;
+            }
+        }
+    }
+    
+    /** 商品を1件更新する。更新できた件数(0 または 1)を返す。 */
+    public int update(long itemId, String itemName, long itemPrice,
+                      String itemCategory, String updatedBy) throws SQLException {
+ 
+        String sql = "UPDATE item "
+                   + "SET item_name = ?, item_price = ?, item_category = ?, "
+                   + "    updated_at = SYSTIMESTAMP, updated_by = ? "
+                   + "WHERE item_id = ?";
+ 
+        try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, itemName);
+            ps.setLong(2, itemPrice);
+            if (itemCategory == null) {
+                ps.setNull(3, Types.VARCHAR);
+            } else {
+                ps.setString(3, itemCategory);
+            }
+            ps.setString(4, updatedBy);
+            ps.setLong(5, itemId);
             return ps.executeUpdate();
         }
     }

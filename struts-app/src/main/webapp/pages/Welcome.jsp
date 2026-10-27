@@ -69,10 +69,10 @@
       <div class="form-row">
         <label for="category">種類</label>
         <html:select property="category" styleId="category">
-          <html:option value="tea">茶系飲料</html:option>
-          <html:option value="soda">炭酸飲料</html:option>
-          <html:option value="fruit">果実飲料</html:option>
-          <html:option value="other">その他</html:option>
+          <html:option value="茶系飲料">茶系飲料</html:option>
+          <html:option value="炭酸飲料">炭酸飲料</html:option>
+          <html:option value="果実飲料">果実飲料</html:option>
+          <html:option value="その他">その他</html:option>
         </html:select>
       </div>
 

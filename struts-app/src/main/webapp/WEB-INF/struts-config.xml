@@ -10,25 +10,11 @@
 <!-- Form Bean Definitions -->
 
     <form-beans>
-    <!-- sample form bean descriptor for an ActionForm
-        <form-bean
-            name="inputForm"
-            type="app.InputForm"/>
-    end sample -->
-	<form-bean name="helloForm" type="form.HelloForm"/>
+    
+		<form-bean name="helloForm" type="form.HelloForm"/>
 	
-    <!-- sample form bean descriptor for a DynaActionForm
-        <form-bean
-            name="logonForm"
-            type="org.apache.struts.action.DynaActionForm">
-            <form-property
-                name="username"
-                type="java.lang.String"/>
-            <form-property
-                name="password"
-                type="java.lang.String"/>
-       </form-bean>
-    end sample -->
+		<form-bean name="itemEditForm" type="form.ItemEditForm"/>
+	
     </form-beans>
 
 
@@ -73,12 +59,6 @@
         	validate="false">
   			<forward name="success" path="/pages/List.jsp"/>
 		</action>
-        
-        <!-- "Input" action -->
-		<action
-            path="/Input"
-            type="org.apache.struts.actions.ForwardAction"
-            parameter="/pages/Input.jsp"/>
 		
 		<!-- "hello" action(welcome.jsp form) -->
 		<action 
@@ -101,33 +81,29 @@
   			<!-- 失敗: リダイレクトせずに forward(request に保存したエラーを一覧に表示するため) -->
   			<forward name="error" path="/itemList.do"/>
 		</action>
-
 		
+		<!-- "edit" action -->
+		<action path="/itemEdit"
+        	type="action.ItemEditAction"
+        	name="itemEditForm"
+        	scope="request"
+        	validate="false">
+  			<forward name="success"  path="/pages/Edit.jsp"/>
+  			<!-- 対象商品が無い・DBエラーのとき: 一覧へ(エラーを引き継ぐため forward) -->
+  			<forward name="notfound" path="/itemList.do"/>
+		</action>
 		
-    <!-- sample input and input submit actions
-  		
-        <action
-            path="/Input"
-            type="org.apache.struts.actions.ForwardAction"
-            parameter="/pages/Input.jsp"/>
-
-        <action
-            path="/InputSubmit"
-            type="app.InputAction"
-            name="inputForm"
-            scope="request"
-            validate="true"
-            input="/pages/Input.jsp"/>
-
-            <action
-                path="/edit*"
-                type="app.Edit{1}Action"
-                name="inputForm"
-                scope="request"
-                validate="true"
-                input="/pages/Edit{1}.jsp"/>
-
-    end samples -->
+		<!-- "update" action -->
+		<action path="/itemUpdate"
+        	type="action.ItemUpdateAction"
+        	name="itemEditForm"
+        	scope="request"
+        	validate="true"
+        	input="/pages/Edit.jsp">
+  			<!-- 成功: 一覧へリダイレクト(再読込での二重更新を防ぐ) -->
+  			<forward name="success" path="/itemList.do" redirect="true"/>
+		</action>
+		
     </action-mappings>
 
 

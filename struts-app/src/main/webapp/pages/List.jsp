@@ -67,11 +67,13 @@
                   <bean:write name="item" property="updatedAt" format="yyyy/MM/dd HH:mm"/>
                 </logic:present>
                 <logic:notPresent name="item" property="updatedAt">
-                  <span class="muted">-</span>
-                </logic:notPresent>
+									<span class="muted">-</span>
+								</logic:notPresent>
               </td>
               <td>
                 <div class="actions">
+                	<html:link action="/itemEdit" paramId="itemId" paramName="item"
+                             paramProperty="itemId" styleClass="btn btn-edit">編集</html:link>
                   <form class="inline-form" method="post"
                         action="<html:rewrite action='/itemDelete'/>"
                         onsubmit="return confirm('この商品を削除します。よろしいですか?');">
