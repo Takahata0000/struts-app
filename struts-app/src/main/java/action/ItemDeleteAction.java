@@ -15,6 +15,8 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
 import dao.ItemDao;
+import dao.ItemDto;
+import util.FileStorage;   
 
 
 /** 商品削除Action。POST のみ受け付け、完了後は一覧へリダイレクトする。 */
@@ -34,10 +36,18 @@ public class ItemDeleteAction extends Action {
         ActionMessages errors = new ActionMessages();
         try {
             long itemId = Long.parseLong(request.getParameter("itemId").trim());
-            int count = new ItemDao().delete(itemId);
+            ItemDao dao = new ItemDao();
+     
+            ItemDto target = dao.findById(itemId);      // 削除する前に、ファイルの場所を控える
+            int count = dao.delete(itemId);
+     
             if (count == 0) {
-                // 既に他の画面で削除済みなど
+                // 既に他の画面で削除済みなど(既存のエラー処理のまま)
                 errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.item.notfound"));
+            } else if (target != null) {
+                // DBの削除が成功してからファイルを消す
+                // (逆の順にすると、DB削除に失敗したのにファイルだけ消える事故になる)
+                FileStorage.deleteQuietly(target.getFilePath());
             }
         } catch (NumberFormatException | NullPointerException e) {
             log.warn("不正な itemId が指定されました。", e);

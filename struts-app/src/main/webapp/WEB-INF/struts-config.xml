@@ -7,140 +7,124 @@
 
 <struts-config>
 
-<!-- Form Bean Definitions -->
+	<!-- Form Bean Definitions -->
 
-    <form-beans>
-    
-		<form-bean name="helloForm" type="form.HelloForm"/>
-	
-		<form-bean name="itemEditForm" type="form.ItemEditForm"/>
-	
-    </form-beans>
+	<form-beans>
 
+		<form-bean name="helloForm" type="form.HelloForm" />
 
-<!-- ========================================= Global Exception Definitions -->
+		<form-bean name="itemEditForm" type="form.ItemEditForm" />
 
-    <global-exceptions>
-        <!-- sample exception handler
-        <exception
-            key="expired.password"
-            type="app.ExpiredPasswordException"
-            path="/changePassword.jsp"/>
-        end sample -->
-    </global-exceptions>
+	</form-beans>
 
 
-<!-- ========== Global Forward Definitions （どの Action からでも使える遷移先）===-->
+	<!-- ========================================= Global Exception Definitions -->
 
-    <global-forwards>
-        <!-- Default forward to "Welcome" action -->
-        <!-- Demonstrates using index.jsp to forward -->
-        <forward
-            name="welcome"
-            path="/Welcome.do"/>
-         <!--<forward
-            name="itemList	"
-            path="/ItemListAction.do"/>-->
-    </global-forwards>
+	<global-exceptions>
+		<!-- sample exception handler <exception key="expired.password" type="app.ExpiredPasswordException" 
+			path="/changePassword.jsp"/> end sample -->
+	</global-exceptions>
 
 
-<!-- =================== Action Mapping Definitions（リクエストの URL と処理を対応） -->
+	<!-- ========== Global Forward Definitions （どの Action からでも使える遷移先）=== -->
 
-    <action-mappings>
+	<global-forwards>
+		<!-- Default forward to "Welcome" action -->
+		<!-- Demonstrates using index.jsp to forward -->
+		<forward name="welcome" path="/Welcome.do" />
+		<!--<forward name="itemList " path="/ItemListAction.do"/> -->
+	</global-forwards>
+
+
+	<!-- =================== Action Mapping Definitions（リクエストの URL と処理を対応） -->
+
+	<action-mappings>
 		<!-- "Welcome" action -->
-        <!-- Forwards to Welcome.jsp -->
-        <action path="/Welcome" forward="/pages/Welcome.jsp"/>
-        
-        <!-- "list" action -->
-		<action 
-			path="/itemList"
-        	type="action.ItemListAction"
-        	scope="request"
-        	validate="false">
-  			<forward name="success" path="/pages/List.jsp"/>
+		<!-- Forwards to Welcome.jsp -->
+		<action path="/Welcome" forward="/pages/Welcome.jsp" />
+
+		<!-- "list" action -->
+		<action path="/itemList" type="action.ItemListAction"
+			scope="request" validate="false">
+			<forward name="success" path="/pages/List.jsp" />
 		</action>
-		
+
 		<!-- "hello" action(welcome.jsp form) -->
-		<action 
-			path="/hello"
-			type="action.HelloAction"
-			name="helloForm"
-			scope="request"
-			validate="true"
+		<action path="/hello" type="action.HelloAction"
+			name="helloForm" scope="request" validate="true"
 			input="/pages/Welcome.jsp">
-			<forward name="success" path="/result.jsp"/>
+			<forward name="success" path="/result.jsp" />
 		</action>
-		
+
 		<!-- "delete" action -->
-		<action path="/itemDelete"
-        	type="action.ItemDeleteAction"
-        	scope="request"
-        	validate="false">
+		<action path="/itemDelete" type="action.ItemDeleteAction"
+			scope="request" validate="false">
 			<!-- 成功: 一覧へリダイレクト(二重削除防止) -->
-  			<forward name="success" path="/itemList.do" redirect="true"/>
-  			<!-- 失敗: リダイレクトせずに forward(request に保存したエラーを一覧に表示するため) -->
-  			<forward name="error" path="/itemList.do"/>
+			<forward name="success" path="/itemList.do" redirect="true" />
+			<!-- 失敗: リダイレクトせずに forward(request に保存したエラーを一覧に表示するため) -->
+			<forward name="error" path="/itemList.do" />
 		</action>
-		
+
 		<!-- "edit" action -->
-		<action path="/itemEdit"
-        	type="action.ItemEditAction"
-        	name="itemEditForm"
-        	scope="request"
-        	validate="false">
-  			<forward name="success"  path="/pages/Edit.jsp"/>
-  			<!-- 対象商品が無い・DBエラーのとき: 一覧へ(エラーを引き継ぐため forward) -->
-  			<forward name="notfound" path="/itemList.do"/>
+		<action path="/itemEdit" type="action.ItemEditAction"
+			name="itemEditForm" scope="request" validate="false">
+			<forward name="success" path="/pages/Edit.jsp" />
+			<!-- 対象商品が無い・DBエラーのとき: 一覧へ(エラーを引き継ぐため forward) -->
+			<forward name="notfound" path="/itemList.do" />
 		</action>
-		
+
 		<!-- "update" action -->
-		<action path="/itemUpdate"
-        	type="action.ItemUpdateAction"
-        	name="itemEditForm"
-        	scope="request"
-        	validate="true"
-        	input="/pages/Edit.jsp">
-  			<!-- 成功: 一覧へリダイレクト(再読込での二重更新を防ぐ) -->
-  			<forward name="success" path="/itemList.do" redirect="true"/>
+		<action path="/itemUpdate" type="action.ItemUpdateAction"
+			name="itemEditForm" scope="request" validate="true"
+			input="/pages/Edit.jsp">
+			<!-- 成功: 一覧へリダイレクト(再読込での二重更新を防ぐ) -->
+			<forward name="success" path="/itemList.do" redirect="true" />
 		</action>
-		
-    </action-mappings>
-    
-<!-- ======================================== ファイルサイズ上限の設定 -->
-	<controller maxFileSize="10M"/>
 
-<!-- ======================================== Message Resources Definitions -->
-	
-    <message-resources parameter="MessageResources" />
+		<!-- "file download" action -->
+		<!-- ファイル配信(PDFを画面内表示 / CSVをダウンロード)。 自分でレスポンスを書き込む(return null)ので、<forward> 
+			は不要 -->
+		<action path="/itemFile" type="action.ItemFileAction"
+			scope="request" validate="false" />
 
+		<!-- "file preview" action -->
+		<!-- プレビュー画面の表示 -->
+		<action path="/itemPreview" type="action.ItemPreviewAction"
+			scope="request" validate="false">
+			<forward name="success" path="/pages/Preview.jsp" />
+			<forward name="notfound" path="/itemList.do" />
+		</action>
 
-<!-- =============================================== Plug Ins Configuration -->
+	</action-mappings>
 
-  <!-- ======================================================= Tiles plugin -->
-  <!--
-     This plugin initialize Tiles definition factory. This later can takes some
-	 parameters explained here after. The plugin first read parameters from
-	 web.xml, thenoverload them with parameters defined here. All parameters
-	 are optional.
-     The plugin should be declared in each struts-config file.
+	<!-- ======================================== ファイルサイズ上限の設定 -->
+	<controller maxFileSize="10M" />
 
-    <plug-in className="org.apache.struts.tiles.TilesPlugin" >
+	<!-- ======================================== Message Resources Definitions -->
 
-      <set-property property="definitions-config"
-                       value="/WEB-INF/tiles-defs.xml" />
-      <set-property property="moduleAware" value="true" />
-    </plug-in>
-  -->  
+	<message-resources parameter="MessageResources" />
 
 
-  <!-- バリデーションプラグイン（Validator plugin）	 -->
+	<!-- =============================================== Plug Ins Configuration -->
 
-  <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
-    <set-property
-        property="pathnames"
-        value="/org/apache/struts/validator/validator-rules.xml,
-               /WEB-INF/validation.xml"/>
-  </plug-in>
+	<!-- ======================================================= Tiles plugin -->
+	<!-- This plugin initialize Tiles definition factory. This later can takes 
+		some parameters explained here after. The plugin first read parameters from 
+		web.xml, thenoverload them with parameters defined here. All parameters are 
+		optional. The plugin should be declared in each struts-config file. <plug-in 
+		className="org.apache.struts.tiles.TilesPlugin" > <set-property property="definitions-config" 
+		value="/WEB-INF/tiles-defs.xml" /> <set-property property="moduleAware" value="true" 
+		/> </plug-in> -->
+
+
+	<!-- バリデーションプラグイン（Validator plugin） -->
+
+	<plug-in
+		className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="/org/apache/struts/validator/validator-rules.xml,
+               /WEB-INF/validation.xml" />
+	</plug-in>
 
 </struts-config>
 

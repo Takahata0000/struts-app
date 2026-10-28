@@ -107,7 +107,7 @@ select {
   border: 1px solid #d3e1ea;
   border-radius: 8px;
 }
-.list-table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 900px; }
+.list-table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 1000px; }
 .list-table thead tr { background: #e3f2fc; color: #1f3a52; }
 .list-table th { text-align: left; padding: 14px 16px; border-bottom: 1px solid #b9d6ea; }
 .list-table td { padding: 14px 16px; border-bottom: 1px solid #e6eef4; }

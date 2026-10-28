@@ -95,7 +95,7 @@ public class ItemDao {
 	
 	/** 一覧・編集で共通して取得する列 */
     private static final String SELECT_COLS =
-        "item_id, item_name, item_price, item_category, created_at, updated_at";
+        "item_id, item_name, item_price, item_category, created_at, updated_at, file_name, file_path, file_type";
  
     /** 1行分の ResultSet を ItemDto に変換する(以降のステップでも使い回す) */
     private ItemDto mapRow(ResultSet rs) throws SQLException {
@@ -106,6 +106,9 @@ public class ItemDao {
         d.setItemCategory(rs.getString("item_category"));
         d.setCreatedAt(rs.getTimestamp("created_at"));
         d.setUpdatedAt(rs.getTimestamp("updated_at"));
+        d.setFileName(rs.getString("file_name"));
+        d.setFilePath(rs.getString("file_path"));
+        d.setFileType(rs.getString("file_type"));
         return d;
     }
  
