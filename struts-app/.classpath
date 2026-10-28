@@ -10,5 +10,7 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/ojdbc8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/smvem/Downloads/commons-io-2.11.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/smvem/Downloads/commons-fileupload-1.5.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

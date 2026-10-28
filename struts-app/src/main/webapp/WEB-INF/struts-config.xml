@@ -105,10 +105,12 @@
 		</action>
 		
     </action-mappings>
-
+    
+<!-- ======================================== ファイルサイズ上限の設定 -->
+	<controller maxFileSize="10M"/>
 
 <!-- ======================================== Message Resources Definitions -->
-
+	
     <message-resources parameter="MessageResources" />
 
 
@@ -131,7 +133,7 @@
   -->  
 
 
-  <!-- =================================================== Validator plugin -->
+  <!-- バリデーションプラグイン（Validator plugin）	 -->
 
   <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
     <set-property

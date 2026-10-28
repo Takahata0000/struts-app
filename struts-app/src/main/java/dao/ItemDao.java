@@ -35,7 +35,50 @@ public class ItemDao {
         PASS = p.getProperty("db.password");
     }
     
-    //商品登録処理
+    /** NULL を許す文字列列に値を設定する。 */
+    private static void setNullableString(PreparedStatement ps, int index, String value) throws SQLException {
+        if (value == null) {
+            ps.setNull(index, Types.VARCHAR);
+        } else {
+            ps.setString(index, value);
+        }
+    }
+    
+    /**
+     * 商品を1件登録し、採番された item_id を返す(添付ファイルの情報つき)。
+     * ファイルが無い場合は fileName / filePath / fileType に null を渡す。
+     */
+    public long insert(String itemName, String itemPrice, String itemCategory, String createdBy,
+                       String fileName, String filePath, String fileType) throws SQLException {
+ 
+        String sql = "INSERT INTO item "
+                   + "(item_id, item_name, item_price, item_category, created_by, "
+                   + " file_name, file_path, file_type) "
+                   + "VALUES (item_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?)";
+ 
+        try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+             PreparedStatement ps = con.prepareStatement(sql, new String[] { "ITEM_ID" })) {
+ 
+            ps.setString(1, itemName);                  // 1: item_name
+            ps.setString(2, itemPrice);                   // 2: item_price
+            setNullableString(ps, 3, itemCategory);     // 3: item_category
+            ps.setString(4, createdBy);                 // 4: created_by
+            setNullableString(ps, 5, fileName);         // 5: file_name
+            setNullableString(ps, 6, filePath);         // 6: file_path
+            setNullableString(ps, 7, fileType);         // 7: file_type
+ 
+            ps.executeUpdate();
+ 
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+            return -1L;
+        }
+    }
+    
+    //商品登録処理(ファイル登録処理実装前)
 	public void insert(String name, String price, String category) throws SQLException{
 		String sql = "INSERT INTO item (item_id, item_name, item_price, item_category, created_by) VALUES (item_seq.NEXTVAL, ?, ?, ?, ?)";
         try (Connection con = DriverManager.getConnection(URL, USER, PASS);
